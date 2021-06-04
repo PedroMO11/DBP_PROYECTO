@@ -112,7 +112,7 @@ enfermera5 = PersonalMedico(10278990, "Daniela", "Tafur", "Enfermera", "Geriatr√
 
 @app.route('/')
 def index():
-    return "HEllo World"
+    return "Hola"
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 5002, debug = True)
