@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-import sys
+#import sys
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost:5432/proyecto'    #Editar para cada integrante la db respectiva con usuario y contrasenia
@@ -15,11 +15,7 @@ class Usuario(db.Model):
     password = db.Column(db.String(8), nullable=False)
     es_admin = db.Column(db.Boolean, nullable=False)
     personal = db.relationship('PersonalMedico', backref = 'usuario_personal', uselist = False, primaryjoin= "Usuario.user == foreign(PersonalMedico.usuario)")
-
-    def __init__(self, user, password, es_admin):
-        self.user = user
-        self.password = password
-        self.es_admin = es_admin
+    paciente = db.relationship('Paciente', backref = 'usuario_paciente', uselist = False, primaryjoin= "Usuario.user == foreign(Paciente.usuario)")
 
 class PersonalMedico(db.Model):
     __tablename__ = 'personal'
@@ -29,32 +25,17 @@ class PersonalMedico(db.Model):
     titulo = db.Column(db.String(80), nullable = False)
     especialidad = db.Column(db.String(80), nullable = False)
     usuario = db.Column(db.String(80), db.ForeignKey('usuario.user'), nullable = False)
-    residencia = db.Column(db.String(80), db.ForeignKey('residencia.nombre'), nullable = False)
+    residencia = db.Column(db.Integer, db.ForeignKey('residencia.id'), nullable = False)
     
-    def __init__(self, dni, nombre, apellido, titulo, especialidad, usuario, residencia):
-        self.dni = dni
-        self.nombre = nombre
-        self.apellido = apellido
-        self.titulo = titulo
-        self.especialidad = especialidad
-        self.usuario = usuario
-        self.residencia = residencia
-
 class Residencia(db.Model):
     __tablename__ = 'residencia'
-    nombre = db.Column(db.String(20), primary_key = True)
+    id = db.Column(db.Integer, primary_key = True)
+    nombre = db.Column(db.String(20), nullable = False)
     direccion = db.Column(db.String(80), nullable = False)
     no_habitaciones = db.Column(db.Integer)
     director = db.Column(db.String(20), nullable = False)
-    personal = db.relationship('PersonalMedico', backref = 'residencia_personal', lazy = "dynamic", primaryjoin = "Residencia.nombre == PersonalMedico.residencia")
-    pacientes = db.relationship('Paciente', backref = 'residencia_paciente', lazy = "dynamic",  primaryjoin= "Residencia.nombre == Paciente.residencia")
-
-    def __init__(self, nombre, direccion, no_habitaciones, director):
-        self.nombre = nombre
-        self.direccion = direccion
-        self.no_habitaciones = no_habitaciones
-        self.director = director
-
+    personal = db.relationship('PersonalMedico', backref = 'residencia_personal', lazy = "dynamic", primaryjoin = "Residencia.id == PersonalMedico.residencia")
+    pacientes = db.relationship('Paciente', backref = 'residencia_paciente', lazy = "dynamic",  primaryjoin= "Residencia.id == Paciente.residencia")
 
 class Paciente(db.Model):
     ___tablename__ = 'paciente'
@@ -63,15 +44,8 @@ class Paciente(db.Model):
     apellido = db.Column(db.String(80), nullable = False)
     edad = db.Column(db.Integer, nullable = False)
     habitacion = db.Column(db.Integer, nullable = False)
-    residencia = db.Column(db.String(20), db.ForeignKey('residencia.nombre'), nullable = False)
-
-    def __init__(self, dni, nombre, apellido, edad, habitacion, residencia):
-        self.dni = dni
-        self.nombre = nombre
-        self.apellido = apellido
-        self.edad = edad
-        self.habitacion = habitacion
-        self.residencia = residencia
+    residencia = db.Column(db.Integer, db.ForeignKey('residencia.id'), nullable = False)
+    usuario = db.Column(db.String(80), db.ForeignKey('usuario.user'))
         
 
 @app.route('/')
