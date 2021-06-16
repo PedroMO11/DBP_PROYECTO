@@ -12,13 +12,14 @@ app.config['SECRET_KEY'] = 'hjklhklhlk'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-class Usuario(db.Model):
+class Usuario(db.Model, UserMixin):
     __tablename__ = 'usuario'
-    user = db.Column(db.String(80), primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(80), nullable = False)
     password = db.Column(db.String(8), nullable=False)
     es_admin = db.Column(db.Boolean, nullable=False)
-    personal = db.relationship('PersonalMedico', backref = 'usuario_personal', uselist = False, primaryjoin= "Usuario.user == foreign(PersonalMedico.usuario)")
-    paciente = db.relationship('Paciente', backref = 'usuario_paciente', uselist = False, primaryjoin= "Usuario.user == foreign(Paciente.usuario)")
+    personal = db.relationship('PersonalMedico', backref = 'usuario_personal', uselist = False, primaryjoin= "Usuario.id == foreign(PersonalMedico.usuario)")
+    paciente = db.relationship('Paciente', backref = 'usuario_paciente', uselist = False, primaryjoin= "Usuario.id == foreign(Paciente.usuario)")
 
 class PersonalMedico(db.Model):
     __tablename__ = 'personal'
@@ -27,7 +28,7 @@ class PersonalMedico(db.Model):
     apellido = db.Column(db.String(80), nullable = False)
     titulo = db.Column(db.String(80), nullable = False)
     especialidad = db.Column(db.String(80), nullable = False)
-    usuario = db.Column(db.String(80), db.ForeignKey('usuario.user'), nullable = False)
+    usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable = False)
     residencia = db.Column(db.Integer, db.ForeignKey('residencia.id'), nullable = False)
     
 class Residencia(db.Model):
@@ -48,7 +49,7 @@ class Paciente(db.Model):
     edad = db.Column(db.Integer, nullable = False)
     habitacion = db.Column(db.Integer, nullable = False)
     residencia = db.Column(db.Integer, db.ForeignKey('residencia.id'), nullable = False)
-    usuario = db.Column(db.String(80), db.ForeignKey('usuario.user'))
+    usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     
 login_manager = LoginManager()
 login_manager.login_view = '/login'
