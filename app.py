@@ -62,20 +62,21 @@ def load_user(user):
 def index():
     return render_template('home.html')
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    usuario = request.form.get('user')
-    contraseña = request.form.get('password')
-    user = Usuario.query.filter_by(user=usuario).first()
-    if user:
-        if user.password == contraseña:
-            flash('Correcto inicio sesion', category='success')
-            login_user(user, remember=True) #min 1:50:30
-            return redirect('/')
+    if request.method == 'POST':
+        usuario = request.form.get('user')
+        contraseña = request.form.get('password')
+        user = Usuario.query.filter_by(user=usuario).first()
+        if user:
+            if user.password == contraseña:
+                flash('Correcto inicio sesion', category='success')
+                login_user(user, remember=True) #min 1:50:30
+                return redirect('/')
+            else:
+                flash('Contraseña incorrecta', category='error')
         else:
-            flash('Contraseña incorrecta', category='error')
-    else:
-        flash('Usuario no existe', category='error')
+            flash('Usuario no existe', category='error')
     return render_template('login.html')
 
 @app.route('/logout')
@@ -85,54 +86,55 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/registro_usuario', methods=['POST'] )
+@app.route('/registro_usuario', methods=['GET', 'POST'] )
 def registro_usuario():
-    usuario = request.form.get('user1')
-    password = request.form.get('password1')
-    rol = request.form.get('rol')
+    if request.method == 'POST':
+        usuario = request.form.get('user1')
+        password = request.form.get('password1')
+        rol = request.form.get('rol')
 
-    user = Usuario.query.filter_by(user=usuario).first()
-    if user:
-        flash('El usuario ya existe', category='error')
-    elif len(usuario) < 5:
-        flash('El usuario tiene pocos caracteres', category='error')
-    elif len(password) < 5:
-        flash('La contraseña es muy corta', category='error')
-    elif len(rol) <5:
-        flash('Rol no valido', category='error')
-        print(rol)
-    else:
-        nuevoUsuario = Usuario(user=usuario, password=password, rol=rol)
-        db.session.add(nuevoUsuario)
-        db.session.commit()
-        login_user(user, remember=True)
-        flash('Usuario creado correctamente', category='success')
-        return redirect('/')
+        user = Usuario.query.filter_by(user=usuario).first()
+        if user:
+            flash('El usuario ya existe', category='error')
+        elif len(usuario) < 5:
+            flash('El usuario tiene pocos caracteres', category='error')
+        elif len(password) < 5:
+            flash('La contraseña es muy corta', category='error')
+        elif len(rol) <5:
+            flash('Rol no valido', category='error')
+            print(rol)
+        else:
+            nuevoUsuario = Usuario(user=usuario, password=password, rol=rol)
+            db.session.add(nuevoUsuario)
+            db.session.commit()
+            login_user(user, remember=True)
+            flash('Usuario creado correctamente', category='success')
+            return redirect('/')
     return render_template("registro_usuario.html")
 
-@app.route('/registro_paciente', methods=['POST'])
+@app.route('/registro_paciente', methods=['GET', 'POST'])
 @login_required
 def registro_paciente():
     #error = False
     #response = {}
-    
-    dni = request.form.get('dni')
-    nombre = request.form.get('nombre')
-    apellido = request.form.get('apellido')
-    edad = request.form.get('edad')
-    habitacion = request.form.get('habitacion')
-    residencia = request.form.get('residencia')
-    paciente = Paciente(dni, nombre, apellido, edad, habitacion, residencia)
-    db.session.add(paciente)
-    db.session.commit()
-    '''
-    except:
-        #error = True
-        db.session.rollback()
-        print(sys.exc_info)
-    finally:
-        db.session.close()
-    '''
+    if request.method == 'POST':
+        dni = request.form.get('dni')
+        nombre = request.form.get('nombre')
+        apellido = request.form.get('apellido')
+        edad = request.form.get('edad')
+        habitacion = request.form.get('habitacion')
+        residencia = request.form.get('residencia')
+        paciente = Paciente(dni, nombre, apellido, edad, habitacion, residencia)
+        db.session.add(paciente)
+        db.session.commit()
+        '''
+        except:
+            #error = True
+            db.session.rollback()
+            print(sys.exc_info)
+        finally:
+            db.session.close()
+        '''
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
