@@ -1,11 +1,14 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import UserMixin, LoginManager, login_manager, login_user, login_required, logout_user, current_user
+from flask.helpers import flash
 #import sys
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost:5432/proyecto'    #Editar para cada integrante la db respectiva con usuario y contrasenia
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'hjklhklhlk'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
@@ -46,17 +49,69 @@ class Paciente(db.Model):
     habitacion = db.Column(db.Integer, nullable = False)
     residencia = db.Column(db.Integer, db.ForeignKey('residencia.id'), nullable = False)
     usuario = db.Column(db.String(80), db.ForeignKey('usuario.user'))
-        
+    
+login_manager = LoginManager()
+login_manager.login_view = '/login'
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user):
+    return Usuario.query.get(user)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('home.html')
 
-@app.route('/login')
+@app.route('/login', methods=['POST'])
 def login():
-    return "hola"
+    usuario = request.form.get('user')
+    contraseña = request.form.get('password')
+    user = Usuario.query.filter_by(user=usuario).first()
+    if user:
+        if user.password == contraseña:
+            flash('Correcto inicio sesion', category='success')
+            login_user(user, remember=True) #min 1:50:30
+            return redirect('/')
+        else:
+            flash('Contraseña incorrecta', category='error')
+    else:
+        flash('Usuario no existe', category='error')
+    return render_template('login.html')
 
-@app.route('/registro', methods=['POST'])
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user
+    return redirect(url_for('login'))
+
+
+@app.route('/registro_usuario', methods=['POST'] )
+def registro_usuario():
+    usuario = request.form.get('user1')
+    password = request.form.get('password1')
+    rol = request.form.get('rol')
+
+    user = Usuario.query.filter_by(user=usuario).first()
+    if user:
+        flash('El usuario ya existe', category='error')
+    elif len(usuario) < 5:
+        flash('El usuario tiene pocos caracteres', category='error')
+    elif len(password) < 5:
+        flash('La contraseña es muy corta', category='error')
+    elif len(rol) <5:
+        flash('Rol no valido', category='error')
+        print(rol)
+    else:
+        nuevoUsuario = Usuario(user=usuario, password=password, rol=rol)
+        db.session.add(nuevoUsuario)
+        db.session.commit()
+        login_user(user, remember=True)
+        flash('Usuario creado correctamente', category='success')
+        return redirect('/')
+    return render_template("registro_usuario.html")
+
+@app.route('/registro_paciente', methods=['POST'])
+@login_required
 def registro_paciente():
     #error = False
     #response = {}
@@ -78,7 +133,7 @@ def registro_paciente():
     finally:
         db.session.close()
     '''
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 5002, debug = True)

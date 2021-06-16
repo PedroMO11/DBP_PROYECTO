@@ -1,0 +1,70 @@
+{% extends "base.html" %} {% block title %}Registro{% endblock %}
+
+{% block content %}  
+<h1>Pagina de Registro</h1>
+<form method="post">
+    <h3 align='center'>Registro</h3>
+    <div class="form-group">
+        <label for="email">DNI</label>
+        <input
+          type="text"
+          class="form-control"
+          id="dni"
+          name="dni"  
+          placeholder="dni"
+        /> <!--el name es para reconocerlo en el backend-->
+      </div>
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          name="nombre"
+          placeholder="Ingresar nombre"
+        />
+      </div>
+      <div class="form-group">
+        <label for="apellido">Apellido</label>
+        <input
+          type="text"
+          class="form-control"
+          id="apellido"
+          name="apellido"
+          placeholder="Ingresar apellido"
+        />
+      </div>
+      <div class="form-group">
+        <label for="edad">Edad</label>
+        <input
+          type="text"
+          class="form-control"
+          id="edad"
+          name="edad"
+          placeholder="Ingresar edad"
+        />
+      </div>
+      <div class="form-group">
+        <label for="habitacion">Habitacion</label>
+        <input
+          type="text"
+          class="form-control"
+          id="habitacion"
+          name="habitacion"
+          placeholder="Ingresar habitacion"
+        />
+      </div>
+      <div class="form-group">
+        <label for="residencia">Residencia</label>
+        <input
+          type="text"
+          class="form-control"
+          id="residencia"
+          name="residencia"
+          placeholder="Ingresar residencia"
+        />
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
