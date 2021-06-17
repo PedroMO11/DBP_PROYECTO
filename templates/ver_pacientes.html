@@ -1,17 +1,43 @@
 {% extends "base.html" %} {% block title %}Pacientes{% endblock %}
 {% block content %}  
+<div class = 'hidden' role = 'alert' id = 'mensaje'>
+    <button type="button" class="close" data-dismiss="alert">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 <h1> Pacientes Registrados </h1>
-<ul id = pacientes>
+<table id = 'pacientes' border = "1">
+    <tr>
+        <th>DNI</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Edad</th>
+        <th>Habitacion</th>
+        <th>Residencia</th>
+        <th>Usuario</th>
+        <td>Borrar Paciente</td>
+        <td>Editar Paciente</td>
+    </tr>
 {% for paciente in pacientes %}
-    <li>
-        {{paciente.nombre}} {{paciente.apellido}}
+    <tr>
+        <td>{{paciente.dni}}</td>
+        <td>{{paciente.nombre}}</td> 
+        <td>{{paciente.apellido}}</td>
+        <td>{{paciente.edad}}</td>
+        <td>{{paciente.habitacion}}</td>
+        <td>{{paciente.residencia}}</td>
+        <td>{{paciente.usuario_paciente.user}}</td>
+        <td>
         <button class = "delete-button" data-id={{paciente.dni}}>&cross;</button>
-    </li>
+        </td>
+        <td>
+        <button class = 'edit-button' data-id={{paciente.dni}}>Editar Paciente</button>
+        </td>
+    </tr>
 {% endfor %}
-</ul>
+</table>
 <script>
     const items = document.querySelectorAll('.delete-button')
-    console.log('hello')
     for (let i = 0; i < items.length; i++) {
         const item = items[i]
         item.onclick = function(e) {
@@ -19,11 +45,26 @@
             const paciente_id = e.target.dataset['id']
             fetch('/pacientes/' + paciente_id + '/delete-paciente', {
                 method: 'DELETE'
-            }).then(function() {
-                const item = e.target.parentElement
+            }).then(function(response) {
+                return response.json()
+            }).then(function(jsonResponse) {
+                document.getElementById('mensaje').className = 'alert alert-success alter-dismissable fade show'
+                document.getElementById('mensaje').innerHTML = jsonResponse['message']
+                const item = e.target.parentElement.parentElement
+                console.log(item)
                 item.remove()
             })
         }
     }
-  </script>
+
+    const items2 = document.querySelectorAll('.edit-button')
+    for (let i = 0; i < items2.length; i++) {
+        const item2 = items2[i]
+        item2.onclick = function(e) {
+            const dni = e.target.dataset['id']
+            const link = '/editar-paciente/' + dni
+            location.href = link
+        }
+    }
+</script>
 {% endblock %}

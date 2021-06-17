@@ -11,9 +11,7 @@ from flask_login import (
     current_user,
 )
 from flask.helpers import flash
-
-# import json
-# import sys
+from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
 app.config[
@@ -46,8 +44,8 @@ class Usuario(db.Model, UserMixin):
 
     def __repr__(self):
         return
-        f"<Usuario: {self.id}, {self.user}, "
-        "{self.password}, {self.es_admin}>"
+        f"<Usuario: {self.id}, {self.user}, {self.password}, "
+        "{self.es_admin}>"
 
 
 class PersonalMedico(db.Model):
@@ -67,7 +65,7 @@ class PersonalMedico(db.Model):
     def __repr__(self):
         return
         f"<PersonalMedico: {self.dni}, {self.nombre}, {self.apellido}, "
-        "{self.titulo}, {self.especialidad}, {self.usuario}, "
+        "{self.titulo}, {self.especialidad}, {self.usuario},  "
         "{self.residencia}>"
 
 
@@ -128,6 +126,13 @@ def load_user(id):
     return Usuario.query.get(int(id))
 
 
+@app.errorhandler(Exception)
+def handle_500(e):
+    if isinstance(e, HTTPException):
+        return e
+    return render_template("500.html", e=e), 500
+
+
 @app.route("/")
 def index():
     return render_template("home.html", user=current_user)
@@ -158,66 +163,146 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/registro_usuario", methods=["GET", "POST"])
-def registro_usuario():
-    if request.method == "POST":
-        usuario = request.form.get("user1")
-        password = request.form.get("password1")
-        admin = request.form.get("admin")
-        if admin == "on":
-            es_admin = True
-        else:
-            es_admin = False
-        dni = request.form.get("dni")
+@app.route("/pacientes/<paciente_dni>/editar", methods=["GET", "POST"])
+def editar_paciente_by_dni(paciente_dni):
+    error = False
+    response = {}
+    try:
+        dni = request.get_json()["dni"]
         persona = Paciente.query.get(dni)
-        if persona:
-            if persona.usuario is None:
+        res = request.get_json()["residencia_id"]
+        residencia = Residencia.query.get(res)
+        persona.nombre = request.get_json()["nombre"]
+        persona.apellido = request.get_json()["apellido"]
+        persona.edad = request.get_json()["edad"]
+        persona.habitacion = request.get_json()["habitacion"]
+        persona.residencia_paciente = residencia
+        db.session.commit()
+        response["message"] = "Paciente editado correctamente"
+    except:
+        error = True
+        db.session.rollback()
+    finally:
+        db.session.close()
+
+    if error:
+        response["message"] = "Error en BE"
+
+    response["error"] = error
+    return jsonify(response)
+
+
+@app.route("/editar-paciente/<paciente_dni>", methods=["GET"])
+def editar_paciente(paciente_dni):
+    paciente = Paciente.query.get(paciente_dni)
+    return render_template("editar_paciente.html",
+                           user=current_user,
+                           paciente=paciente)
+
+
+@app.route("/usuarios/<user>/registrar", methods=["GET", "POST"])
+def registrar_usuario_by_id(user):
+    error = False
+    response = {}
+    try:
+        usuario = request.get_json()["user"]
+        password = request.get_json()["password"]
+        admin = request.get_json()["es_admin"]
+        dni = request.get_json()["dni"]
+        personal = PersonalMedico.query.get(dni)
+        persona = Paciente.query.get(dni)
+        if admin:
+            if persona is None and personal is None:
                 user = Usuario.query.filter_by(user=usuario).first()
                 if user:
-                    flash("Usuario ya existe", category="error")
+                    response["message"] = "Usuario ya existe"
                 else:
+                    nombre = request.get_json()["nombre"]
+                    apellido = request.get_json()["apellido"]
+                    titulo = request.get_json()["titulo"]
+                    especialidad = request.get_json()["especialidad"]
+                    res = request.get_json()["residencia_id"]
+                    residencia = Residencia.query.get(res)
                     nuevoUsuario = Usuario(
-                        user=usuario, password=password, es_admin=es_admin
+                        user=usuario, password=password, es_admin=admin
                     )
-                    persona.usuario_paciente = nuevoUsuario
-                    db.session.add(nuevoUsuario)
+                    print(nuevoUsuario)
+                    nuevoPersonal = PersonalMedico(
+                        dni=dni,
+                        nombre=nombre,
+                        apellido=apellido,
+                        titulo=titulo,
+                        especialidad=especialidad,
+                        residencia_personal=residencia,
+                        usuario_personal=nuevoUsuario,
+                    )
+                    print(nuevoPersonal)
+                    db.session.add_all([nuevoUsuario, nuevoPersonal])
                     db.session.commit()
-                    flash("Usuario creado correctamente", category="success")
-                    return redirect("/")
-            else:
-                flash("Paciente ya tiene cuenta registrada", category="error")
+                    response["message"] = "Usuario creado correctamente"
         else:
-            flash("El paciente de paciente no existe", category="error")
-        """
-        except:
-            error = True
-            db.session.rollback()
-        finally:
-            db.session.close()
-        """
+            if persona:
+                if persona.usuario is None:
+                    user = Usuario.query.filter_by(user=usuario).first()
+                    if user:
+                        response["message"] = "Usuario ya existe"
+                    else:
+                        nuevoUsuario = Usuario(
+                            user=usuario, password=password, es_admin=admin
+                        )
+                        persona.usuario_paciente = nuevoUsuario
+                        db.session.add(nuevoUsuario)
+                        db.session.commit()
+                        response["message"] = "Usuario creado correctamente"
+                else:
+                    response["message"] = "Paciente ya tiene cuenta registrada"
+            else:
+                response["message"] = "DNI de paciente no existe"
+    except:
+        error = True
+        db.session.rollback()
+    finally:
+        db.session.close()
 
+    if error:
+        response["message"] = "Error en el BE"
+
+    response["error"] = error
+
+    return jsonify(response)
+
+
+@app.route("/registro_usuario", methods=["GET", "POST"])
+def registro_usuario():
     return render_template("registro_usuario.html", user=current_user)
 
 
 @app.route("/registro_paciente", methods=["GET", "POST"])
 @login_required
 def registro_paciente():
-    # error = False
-    # response = {}
-    if request.method == "POST":
-        dni = request.form.get("dni")
-        persona = Paciente.query.get(dni)
+    return render_template("registro_paciente.html", user=current_user)
+
+
+@app.route("/pacientes/<paciente_id>/registrar", methods=["GET", "POST"])
+@login_required
+def registrar_paciente_by_id(paciente_id):
+    error = False
+    response = {}
+    persona = Paciente.query.get(paciente_id)
+
+    try:
         if persona:
-            flash("Persona ya registrada", category="error")
+            response["message"] = "Persona con este DNI ya ha sido registrada"
+            response["category"] = "error"
         else:
-            nombre = request.form.get("nombre")
-            apellido = request.form.get("apellido")
-            edad = request.form.get("edad")
-            habitacion = request.form.get("habitacion")
-            res = request.form.get("residencia")
-            residencia = Residencia.query.filter_by(nombre=res).first()
+            nombre = request.get_json()["nombre"]
+            apellido = request.get_json()["apellido"]
+            edad = request.get_json()["edad"]
+            habitacion = request.get_json()["habitacion"]
+            res = request.get_json()["residencia_id"]
+            residencia = Residencia.query.get(res)
             paciente = Paciente(
-                dni=dni,
+                dni=paciente_id,
                 nombre=nombre,
                 apellido=apellido,
                 edad=edad,
@@ -226,44 +311,45 @@ def registro_paciente():
             )
             db.session.add(paciente)
             db.session.commit()
-            flash("Paciente registrado correctamente", category="success")
-    """
-    except:
-        #error = True
-        db.session.rollback()
-        print(sys.exc_info)
-    finally:
-        db.session.close()
-    """
-    return render_template("registro_paciente.html")
-
-
-@app.route("/pacientes")
-@login_required
-def ver_pacientes():
-    return render_template("ver_pacientes.html",
-                           pacientes=Paciente.query.all()
-                           )
-
-
-@app.route("/pacientes/<paciente_dni>/delete-paciente", methods=["DELETE"])
-@login_required
-def delete_paciente_by_id(paciente_dni):
-    response = {}
-    error = False
-    try:
-        paciente = Paciente.query.get(paciente_dni)
-        if paciente is None:
-            response["error_message"] = "DNI no existe"
-        db.session.delete(paciente)
-        db.session.commit()
+            response["message"] = "Paciente registrado correctamente"
+            response["category"] = "success"
     except:
         error = True
         db.session.rollback()
     finally:
         db.session.close()
 
+    if error:
+        response["message"] = "Error en el BE"
+
     response["error"] = error
+    return jsonify(response)
+
+
+@app.route("/pacientes")
+@login_required
+def ver_pacientes():
+    return render_template(
+        "ver_pacientes.html", pacientes=Paciente.query.all(), user=current_user
+    )
+
+
+@app.route("/pacientes/<paciente_dni>/delete-paciente", methods=["DELETE"])
+@login_required
+def delete_paciente_by_id(paciente_dni):
+    response = {}
+    paciente = Paciente.query.get(paciente_dni)
+    user = paciente.usuario_paciente
+    if paciente is None:
+        response["message"] = "No existe paciente"
+    else:
+        response["message"] = "Paciente eliminado con exito"
+        db.session.delete(paciente)
+        if user:
+            usuario = Usuario.query.get(user.id)
+            db.session.delete(usuario)
+        db.session.commit()
+
     return jsonify(response)
 
 

@@ -1,0 +1,111 @@
+{% extends "base.html" %} {% block title %}Registro{% endblock %}
+
+{% block content %}  
+<div class = 'hidden' role = 'alert' id = 'mensaje'>
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<h1>Editar Registro</h1>
+<form id = 'editar_paciente'>
+    <h3 align='center'>Registro</h3>
+    <div class="form-group">
+        <label for="email">DNI</label>
+        <input
+          type="text"
+          class="form-control"
+          id="dni"
+          name="dni"  
+          placeholder="DNI"
+          value = {{paciente.dni}}
+          readonly
+        /> <!--el name es para reconocerlo en el backend-->
+      </div>
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          name="nombre"
+          placeholder="Ingresar nombre"
+          value = {{paciente.nombre}}
+        />
+      </div>
+      <div class="form-group">
+        <label for="apellido">Apellido</label>
+        <input
+          type="text"
+          class="form-control"
+          id="apellido"
+          name="apellido"
+          placeholder="Ingresar apellido"
+          value = {{paciente.apellido}}
+        />
+      </div>
+      <div class="form-group">
+        <label for="edad">Edad</label>
+        <input
+          type="text"
+          class="form-control"
+          id="edad"
+          name="edad"
+          placeholder="Ingresar edad"
+          value = {{paciente.edad}}
+        />
+      </div>
+      <div class="form-group">
+        <label for="habitacion">Habitacion</label>
+        <input
+          type="text"
+          class="form-control"
+          id="habitacion"
+          name="habitacion"
+          placeholder="Ingresar habitacion"
+          value = {{paciente.habitacion}}
+        />
+      </div>
+      <div class="form-group">
+        <label for="residencia">Residencia</label>
+        <select class = 'form-control' name = 'residencias' id = 'residencias'>
+          <option value = 1 {% if paciente.id %} selected {% endif %}>San Juan</option>
+          <option value = 2 {% if paciente.id %} {% else %} selected {% endif %}>Los Portales</option>
+        </select>
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">Editar</button>
+</form>
+<script>
+    document.getElementById('editar_paciente').onsubmit = function(e) {
+        e.preventDefault();
+        const paciente_id = document.getElementById('dni').value
+        console.log(document.getElementById('residencias').value)
+        fetch('/pacientes/' + paciente_id + '/editar', {
+            method: 'POST',
+            body: JSON.stringify({
+                'dni': paciente_id,
+                'nombre': document.getElementById('nombre').value,
+                'apellido': document.getElementById('apellido').value,
+                'edad': document.getElementById('edad').value,
+                'habitacion': document.getElementById('habitacion').value,
+                'residencia_id': document.getElementById('residencias').value
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function(response) {
+          return response.json()
+        }).then(function(jsonResponse) {
+          if (jsonResponse['error'] === false) {
+            document.getElementById('mensaje').className = 'alert alert-success alter-dismissable fade show'
+            document.getElementById('mensaje').innerHTML = jsonResponse['message']
+            location.href = '/pacientes'
+          }
+          else {
+            document.getElementById('mensaje').className = 'alert alert-warning alter-dismissable fade show'
+            document.getElementById('mensaje').innerHTML = jsonResponse['message']
+          }
+        })
+    }
+</script>
+{% endblock %}

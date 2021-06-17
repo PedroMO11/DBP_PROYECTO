@@ -1,0 +1,45 @@
+{% extends "base.html" %} {% block title %}Registro{% endblock %}
+
+{% block content %}  
+<div class = 'hidden' role = 'alert' id = 'mensaje'>
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form id = 'datos'>
+    <div class = 'hidden' id = 'datos'>
+        <h3 align = 'center'>Registro de Datos Personal</h3>
+        <div class = 'form-group'>
+          <label for = 'nombre'> Nombre </label> 
+          <input type = 'text'class = 'form-control' id = 'nombre' name = 'nombre' placeholder="Nombre"/>
+        </div>
+        <div class = 'form-group'>
+          <label for = 'apellido'> Apellido </label> 
+          <input type = 'text'class = 'form-control' id = 'apellido' name = 'apellido' placeholder="Apellido"/>
+        </div>
+        <div class = 'form-group'>
+          <label for = 'titulo'> Titulo </label> 
+          <input type = 'text'class = 'form-control' id = 'titulo' name = 'titulo' placeholder="Titulo"/>
+        </div>
+        <div class = 'form-group'>
+          <label for = 'especialidad'> Especialidad </label> 
+          <input type = 'text'class = 'form-control' id = 'especialidad' name = 'especialidad' placeholder="Especialidad"/>
+        </div>
+        <div class = 'form-group'>
+          <label for = 'residencia'> Residencia </label> 
+          <select class ='form-control' name = 'residencias' id = 'residencias'>
+            <option value = 1>San Juan</option>
+            <option value = 2>Los Portales</option>
+          </select>
+        </div>
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+    
+</script>
+
+
+{% endblock %}
