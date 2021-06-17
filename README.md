@@ -37,8 +37,6 @@ Script para iniciar la base de datos: El scripts para correr la base de datos es
 
 - API's: API de RESTful
 
-API's: API de RESTful
-
 ## **Forma de Auntenticación:**
 El usuario necesita crear una cuenta para hacer uso de la funcionalidades. 
 Usamos Flask-Login, para manejar las tareas de iniciar session, cerrar sesion y recordar las sesiones de los usuarios durante un periodo de tiempo.
