@@ -48,9 +48,6 @@ Usamos Flask-Login, para manejar las tareas de iniciar session, cerrar sesion y 
 ## **Manejo de Errores HTTP:**
 - 500
 - 400
-- 300
-- 200
-- 100
 
 ## **Deployment Scripts:**
 1. Correr el archivo app.py para crear las tablas en la base de datos
