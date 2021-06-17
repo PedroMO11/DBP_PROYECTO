@@ -7,7 +7,7 @@ Nombre del Proyecto: Aplicación Web para el registro de ancianos con Covid en e
 - Pedro Mori
 - Sebastian Meza
 - Luis David Torres
-- Elizabeth Huaman
+- Elizabeth Huamán
 
 ## **Descripción del Proyecto:**
 La pagina web sirve para para un geriatrioco en el cual se ecuentren pacientes covid. En la pagina es requerido tener un usuario para poder acceder a las funcionalidades de ver y registrar paciente.
