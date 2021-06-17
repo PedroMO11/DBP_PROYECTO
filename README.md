@@ -14,8 +14,6 @@ La pagina web sirve para para un geriatrioco en el cual se ecuentren pacientes c
 
 Misión: Queremos ser una pagina web utilizada por los geriatricos para poder tener un mejor control de los pacientes que se encuentran en la residencia.
 
-Misión: Queremos ser una pagina web utilizada por los geriatricos para poder tener un mejor control de los pacientes que se encuentran en la residencia.
-
 Visión: Ser la pagina web utilizada por diferentes geriatricos y clinicas para poder tener un registro de los pacientes, por parte de los doctores, pero tambien poder estar al tanto de los pacientes por parte de los familiares.
 
 ## **Tecnologías:**
