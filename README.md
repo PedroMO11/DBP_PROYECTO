@@ -21,14 +21,14 @@ Ser la pagina web utilizada por diferentes geriatricos y clinicas para poder ten
 ## **Tecnologías:**
 
 - Front-End: Bootstrap, JavaScript
-
+- Framework: Bootstrap 4
 - Back-End: 
-    - Framework:
-    - Flask
     - Librerias:
         - Flask-Login
         - Flask-SQLAlchemy
         - Flask-Migrate
+        - Flask
+    
 
 **Base de Datos:**
 PostgreSQL
