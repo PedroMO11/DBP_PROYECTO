@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block title %}Pacientes{% endblock %}
+{% block content %}  
+<h1> Pacientes Registrados </h1>
+<ul id = pacientes>
+{% for paciente in pacientes %}
+    <li>
+        {{paciente.nombre}} {{paciente.apellido}}
+        <button class = "delete-button" data-id={{paciente.dni}}>&cross;</button>
+    </li>
+{% endfor %}
+</ul>
+<script>
+    const items = document.querySelectorAll('.delete-button')
+    console.log('hello')
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i]
+        item.onclick = function(e) {
+            console.log('click event: ', e)
+            const paciente_id = e.target.dataset['id']
+            fetch('/pacientes/' + paciente_id + '/delete-paciente', {
+                method: 'DELETE'
+            }).then(function() {
+                const item = e.target.parentElement
+                item.remove()
+            })
+        }
+    }
+  </script>
+{% endblock %}

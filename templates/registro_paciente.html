@@ -2,7 +2,7 @@
 
 {% block content %}  
 <h1>Pagina de Registro</h1>
-<form method="POST">
+<form id = 'form_paciente' method = 'POST'>
     <h3 align='center'>Registro</h3>
     <div class="form-group">
         <label for="email">DNI</label>
@@ -11,7 +11,7 @@
           class="form-control"
           id="dni"
           name="dni"  
-          placeholder="dni"
+          placeholder="DNI"
         /> <!--el name es para reconocerlo en el backend-->
       </div>
       <div class="form-group">

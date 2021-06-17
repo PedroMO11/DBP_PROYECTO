@@ -19,13 +19,14 @@
           <div class="collapse navbar-collapse" id="navbar">
             <div class="navbar-nav">
               <a class="nav-item nav-link" id="home" href="/">Home</a>
-              
+              {% if current_user.is_authenticated %}
               <a class="nav-item nav-link" id="register" href="/registro_paciente">Registrar Paciente</a>
+              <a class="nav-tem nav-link" id="pacientes" href="/pacientes"> Ver Pacientes Registrados </a>
               <a class="nav-item nav-link" id="logout" href="/logout">Cerrar Session</a>
-               
+              {% else %} 
               <a class="nav-item nav-link" id="login" href="/login">Iniciar Sesion</a>
               <a class="nav-item nav-link" id="signUp" href="/registro_usuario">Registrar Nuevo Usuario</a>
-               
+              {% endif %}
             </div>
           </div>
         </nav>
@@ -72,5 +73,6 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"
         ></script>
+
       </body>
 </html>
