@@ -45,11 +45,11 @@ El usuario necesita crear una cuenta para hacer uso de la funcionalidades.
 Usamos Flask-Login, para manejar las tareas de iniciar session, cerrar sesion y recordar las sesiones de los usuarios durante un periodo de tiempo.
 
 ## **Manejo de Errores HTTP:**
--500
--400
--300
--200
--100
+- 500
+- 400
+- 300
+- 200
+- 100
 
 ## **Deployment Scripts:**
 1. Correr el archivo app.py para crear las tablas en la base de datos
