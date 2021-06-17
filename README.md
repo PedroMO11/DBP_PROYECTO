@@ -1,15 +1,16 @@
 # DBP_PROYECTO
 
-Nombre del Proyecto: Aplicación Web para el registro de ancianos con Covid en el albergue Gerovitalis
+# **Nombre del Proyecto:**
+Aplicación Web para el registro de ancianos con Covid en el albergue Gerovitalis
 
-Integrantes:
+**Integrantes:**
 - Francisco Magot
 - Pedro Mori
 - Sebastian Meza
 - Luis David Torres
 - Elizabeth Huamán
 
-**Descripción del Proyecto:**
+### **Descripción del Proyecto:**
 La pagina web sirve para para un geriatrioco en el cual se ecuentren pacientes covid. En la pagina es requerido tener un usuario para poder acceder a las funcionalidades de ver y registrar paciente.
 
 **Misión:**
