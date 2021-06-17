@@ -38,7 +38,8 @@ Visión: Ser la pagina web utilizada por diferentes geriatricos y clinicas para 
 
 - API's: API de RESTful
 
-## **Hosts:**
+## **Hosts:** 
+- 0.0.0.0
 
 ## **Forma de Auntenticación:**
 El usuario necesita crear una cuenta para hacer uso de la funcionalidades. 
