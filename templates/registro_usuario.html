@@ -4,6 +4,7 @@
 <h1>Pagina de Inscripcion</h1>
 <form method="POST">
     <h3 align='center'>Inscripcion</h3>
+    <h3> Credenciales </h3>
     <div class="form-group">
         <label for="user">Usuario</label>
         <input
@@ -11,7 +12,7 @@
           class="form-control"
           id="user1"
           name="user1"  
-          placeholder="Ingresar usuario"
+          placeholder="Usuario"
         /> <!--el name es para reconocerlo en el backend-->
       </div>
       <div class="form-group">
@@ -21,7 +22,48 @@
           class="form-control"
           id="password1"
           name="password1"
-          placeholder="Ingresar Contraseña"
+          placeholder="Contraseña"
+        />
+      </div>
+      <h3> Datos Personales </h3>
+      <div class="form-group">
+        <label for="dni">DNI</label>
+        <input
+          type="text"
+          class="form-control"
+          id="dni1"
+          name="dni1"
+          placeholder="DNI"
+        />
+      </div>
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input
+          type="text"
+          class="form-control"
+          id="nombre1"
+          name="nombre1"
+          placeholder="Nombre"
+        />
+      </div>
+      <div class="form-group">
+        <label for="apellido">Apellido</label>
+        <input
+          type="text"
+          class="form-control"
+          id="apellido1"
+          name="apellido1"
+          placeholder="Apellido"
+        />
+      </div>
+      <div class="form-group">
+        <label for="residencia1">Residencia</label>
+        <input
+          type="text"
+          class="form-control"
+          id="residencia1"
+          name="residencia1"
+          placeholder="Residencia"
         />
       </div>
       <div class="form-group">
@@ -31,9 +73,28 @@
           class="form-control"
           id="rol"
           name="rol"
-          placeholder="Ingresar rol"
+          placeholder="Rol (Paciente o Personal)"
         />
-      </div>
+      {% if rol == "Personal"%}
+      <div class="form-group">
+        <label for="titulo">Titulo</label>
+        <input
+          type="text"
+          class="form-control"
+          id="titulo"
+          name="titulo"
+          placeholder="Titulo"
+        />
+        <div class="form-group">
+          <label for="especialidad">Especialidad</label>
+          <input
+            type="text"
+            class="form-control"
+            id="especialidad"
+            name="especialidad"
+            placeholder="Especialidad"
+          />
+        {%endif%}
       <br />
       <button type="submit" class="btn btn-primary">Submit</button>
 </form>

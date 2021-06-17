@@ -92,7 +92,6 @@ def registro_usuario():
     if request.method == 'POST':
         usuario = request.form.get('user1')
         password = request.form.get('password1')
-        rol = request.form.get('rol')
 
         user = Usuario.query.filter_by(user=usuario).first()
         if user:
@@ -101,16 +100,25 @@ def registro_usuario():
             flash('El usuario tiene pocos caracteres', category='error')
         elif len(password) < 5:
             flash('La contraseña es muy corta', category='error')
-        elif len(rol) <5:
-            flash('Rol no valido', category='error')
-            print(rol)
         else:
-            nuevoUsuario = Usuario(user=usuario, password=password, rol=rol)
-            db.session.add(nuevoUsuario)
-            db.session.commit()
-            login_user(user, remember=True)
-            flash('Usuario creado correctamente', category='success')
-            return redirect('/')
+            #dni = request.form.get('dni1')
+            #nombre = request.form.get('nombre1')
+            #apellido = request.form.get('apellido1')
+            #residencia = request.form.get('residencia1')
+            rol = request.form.get('rol')
+            if rol == "Personal":
+                nuevoUsuario = Usuario(id=12, user=usuario, password=password, es_admin=0)
+                db.session.add(nuevoUsuario)
+                db.session.commit()
+                #login_user(user, remember=True)
+                flash('Usuario creado correctamente', category='success')
+                return redirect('/')
+                #except:
+                    #db.session.rollback()
+                    #flash('Falla al crear usuario', category='error')
+                    #return render_template("registro_usuario.html")
+                #finally:
+                    #db.session.close()
     return render_template("registro_usuario.html")
 
 @app.route('/registro_paciente', methods=['GET', 'POST'])
