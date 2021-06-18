@@ -5,6 +5,11 @@
     display: none;
   }
 </style>
+<div class = 'hidden' role = 'alert' id = 'mensaje'>
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 <h1>Pagina de Inscripcion</h1>
 <form id = "form_registrar", method = 'POST'>
     <h3 align='center'>Inscripcion</h3>
@@ -101,6 +106,18 @@
       }),
       headers: {
         'Content-Type': 'application/json'
+      }
+    }).then(function(response) {
+      return response.json()
+    }).then(function(jsonResponse) {
+      if (jsonResponse['error'] === false) {
+        document.getElementById('mensaje').className = 'alert alert-success alter-dismissable fade show'
+        document.getElementById('mensaje').innerHTML = jsonResponse['message']
+        document.getElementById('form_paciente').reset()
+      }
+      else {
+        document.getElementById('mensaje').className = 'alert alert-warning alter-dismissable fade show'
+        document.getElementById('mensaje').innerHTML = jsonResponse['message']
       }
     })
   }

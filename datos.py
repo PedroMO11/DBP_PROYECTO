@@ -6,18 +6,19 @@ losportales = Residencia(id = 2, nombre = "Los Portales", direccion = "La Molina
 db.session.add_all([sanjuan, losportales])
 db.session.commit()
 
-usuario1 = Usuario(id = 1, user = "sgutierrez", password = "1234", es_admin = 1)
-usuario2 = Usuario(id = 2, user= "fsantos",password =  "1234", es_admin = 1)
-usuario3 = Usuario(id = 3, user = "egambirazio", password = "1234",es_admin = 1)
-usuario4 = Usuario(id = 4, user = "rvega", password ="1234", es_admin = 1)
-usuario5 = Usuario(id = 5, user = "lrodriguez", password = "1234", es_admin = 1)
-usuario6 = Usuario(id = 6, user = "fnovoa", password = "1234", es_admin = 1)
-usuario7 = Usuario(id = 7, user = "mchavez", password = "1234", es_admin = 1)
-usuario8 = Usuario(id = 8, user = "lbalta", password = "1234", es_admin = 1)
-usuario9 = Usuario(id = 9, user = "hdurand", password = "1234" ,es_admin = 1)
-usuario10 = Usuario(id = 10, user = "dtafur", password = "1234", es_admin = 1)
+usuario1 = Usuario(user = "sgutierrez", password = "1234", es_admin = 1)
+usuario2 = Usuario(user= "fsantos",password =  "1234", es_admin = 1)
+usuario3 = Usuario(user = "egambirazio", password = "1234",es_admin = 1)
+usuario4 = Usuario(user = "rvega", password ="1234", es_admin = 1)
+usuario5 = Usuario(user = "lrodriguez", password = "1234", es_admin = 1)
+usuario6 = Usuario(user = "fnovoa", password = "1234", es_admin = 1)
+usuario7 = Usuario(user = "mchavez", password = "1234", es_admin = 1)
+usuario8 = Usuario(user = "lbalta", password = "1234", es_admin = 1)
+usuario9 = Usuario(user = "hdurand", password = "1234" ,es_admin = 1)
+usuario10 = Usuario(user = "dtafur", password = "1234", es_admin = 1)
+usuario11 = Usuario(user = "panchomb", password = "1234", es_admin = 0)
 
-db.session.add_all([usuario1, usuario2, usuario3, usuario4, usuario5,usuario6, usuario7, usuario8, usuario9, usuario10])
+db.session.add_all([usuario1, usuario2, usuario3, usuario4, usuario5,usuario6, usuario7, usuario8, usuario9, usuario10, usuario11])
 db.session.commit()
 
 medico1 = PersonalMedico(dni = 71284499, nombre = "Santiago", apellido =  "Gutierrez",titulo =  "Doctor", especialidad =  "Neurología", residencia_personal = sanjuan, usuario_personal = usuario1)
@@ -32,4 +33,9 @@ enfermera4 = PersonalMedico(dni = 17820483, nombre = "Haydi", apellido = "Durand
 enfermera5 = PersonalMedico(dni = 93049588, nombre = "Daniela", apellido = "Tafur", titulo = "Enfermera", especialidad = "Geriatria", residencia_personal = losportales, usuario_personal = usuario10)
 
 db.session.add_all([medico1, medico2, medico3, medico4, medico5, enfermera1, enfermera2, enfermera3, enfermera4, enfermera5])
+db.session.commit()
+
+paciente =  Paciente(dni = 73363673, nombre = "Francisco", apellido = "Magot", edad = 19, habitacion = 301, residencia_paciente = losportales, usuario_paciente = usuario11)
+
+db.session.add(paciente)
 db.session.commit()

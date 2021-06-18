@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 658536181a4e
+Revision ID: c2cf494d67b8
 Revises: 
-Create Date: 2021-06-16 12:59:13.126165
+Create Date: 2021-06-17 19:28:43.586063
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '658536181a4e'
+revision = 'c2cf494d67b8'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,10 +28,11 @@ def upgrade():
     )
     op.create_table('usuario',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user', sa.String(length=80), nullable=False),
+    sa.Column('user', sa.String(length=80), nullable=True),
     sa.Column('password', sa.String(length=8), nullable=False),
     sa.Column('es_admin', sa.Boolean(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user')
     )
     op.create_table('paciente',
     sa.Column('dni', sa.Integer(), nullable=False),
@@ -40,9 +41,9 @@ def upgrade():
     sa.Column('edad', sa.Integer(), nullable=False),
     sa.Column('habitacion', sa.Integer(), nullable=False),
     sa.Column('residencia', sa.Integer(), nullable=False),
-    sa.Column('usuario', sa.Integer(), nullable=True),
+    sa.Column('usuario', sa.String(length=80), nullable=True),
     sa.ForeignKeyConstraint(['residencia'], ['residencia.id'], ),
-    sa.ForeignKeyConstraint(['usuario'], ['usuario.id'], ),
+    sa.ForeignKeyConstraint(['usuario'], ['usuario.user'], ),
     sa.PrimaryKeyConstraint('dni')
     )
     op.create_table('personal',
@@ -51,10 +52,10 @@ def upgrade():
     sa.Column('apellido', sa.String(length=80), nullable=False),
     sa.Column('titulo', sa.String(length=80), nullable=False),
     sa.Column('especialidad', sa.String(length=80), nullable=False),
-    sa.Column('usuario', sa.Integer(), nullable=False),
+    sa.Column('usuario', sa.String(length=80), nullable=True),
     sa.Column('residencia', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['residencia'], ['residencia.id'], ),
-    sa.ForeignKeyConstraint(['usuario'], ['usuario.id'], ),
+    sa.ForeignKeyConstraint(['usuario'], ['usuario.user'], ),
     sa.PrimaryKeyConstraint('dni')
     )
     # ### end Alembic commands ###
