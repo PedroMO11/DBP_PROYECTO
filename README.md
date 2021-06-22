@@ -34,15 +34,11 @@ Visión:
 **Base de Datos:**
 PostgreSQL
 
-Base de Datos:
-
-Script para iniciar la base de datos:
+Script para iniciar la base de datos con datos: datos.py
 
 ## **Forma de Auntenticación:**
 El usuario necesita crear una cuenta para hacer uso de la funcionalidades. 
 Usamos Flask-Login, para manejar las tareas de iniciar session, cerrar sesion y recordar las sesiones de los usuarios durante un periodo de tiempo.
-
-Forma de Auntenticación:
 
 Manejo de Errores HTTP:
 - 500
@@ -51,7 +47,7 @@ Manejo de Errores HTTP:
 - 200
 - 100
 
-Deployment Scripts:
+Deployment Scripts: Ejecutar app.py para la creación de tablas en la BD con Flask Migrate. Posteriormente, datos.py para la inserción de datos. Finalmente, ejecutar app.py nuevamente para tener en funcionamiento el servidor web. 
 
 
 
