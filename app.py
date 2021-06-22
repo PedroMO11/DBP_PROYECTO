@@ -253,11 +253,9 @@ def registrar_usuario_by_id(user):
                             persona.usuario_paciente = nuevoUsuario
                             db.session.add(nuevoUsuario)
                             db.session.commit()
-                            response["message"] =
-                            "Usuario creado correctamente"
+                            response["message"] = "Usuario creado"
                     else:
-                        response["message"] =
-                        "Paciente ya tiene cuenta registrada"
+                        response["message"] = "Paciente ya registrado"
                 else:
                     response["message"] = "DNI de paciente no existe"
     except:
