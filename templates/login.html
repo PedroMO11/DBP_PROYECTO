@@ -1,13 +1,9 @@
 {% extends "base.html" %} {% block title %}Inicio Sesion{% endblock %}
 
-
 {% block content %}  
-<h2>Iniciar sesión</h2>
-
-<p>Por favor, ingrese los datos solicitados</p>
-<p>Todos los campos son obligatorios*</p>
+<h1>Pagina de Inicio de Sesion</h1>
 <form method="POST">
-
+    <h3 align='center'>Iniciar Sesion</h3>
     <div class="form-group">
         <label for="user">Usuario</label>
         <input
@@ -30,9 +26,4 @@
       <br />
       <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-    
-    
-<div style="margin-top: 20px;">
-  <a href="/" class="btn btn-info" role="button"> Retornar a la página principal</a> 
-</div>
 {% endblock %}
